@@ -246,6 +246,10 @@
         z-index: 60; max-width: calc(100vw - 32px); text-align: center;
       }
       .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+      .upload-box { border: 1.5px dashed #b9a888; border-radius: 14px; padding: 22px 18px; text-align: center; background: #fdfaf3; }
+      .upload-box img { max-width: 220px; max-height: 260px; border-radius: 10px; display: block; margin: 0 auto 12px; }
+      .upload-box .uhint { font-size: 13px; color: #8a7a5c; margin-top: 10px; line-height: 1.55; }
+      .badge-open { display: inline-block; font-size: 11px; font-weight: 700; color: #2e7d4f; border: 1px solid #2e7d4f; border-radius: 999px; padding: 1px 8px; margin-left: 6px; vertical-align: 2px; }
     </style>
   </head>
   <body>
@@ -264,6 +268,7 @@
           <p>초상공방은 웹소설 작가를 위한 인물 초상 공방입니다. 머릿속에만 있던 인물을 글로 들려주시면, 장르의 숨결을 입은 초상 한 장으로 정성껏 빚어 드립니다. 표지 구도까지 한 번에 완성해 드려요.</p>
           <div class="cta-row">
             <button class="btn primary" data-goto="create">초상 만들기</button>
+            <button class="btn" data-goto="photo">사진으로 만들기</button>
             <button class="btn" data-goto="studio">내 작업실 보기</button>
           </div>
         </div>
@@ -372,6 +377,79 @@
         </form>
       </section>
 
+      <!-- ══════════ 사진으로 만들기 ══════════ -->
+      <section class="view" id="view-photo">
+        <h2 class="sec-title" style="margin-top:2px">사진으로 만들기</h2>
+        <p class="sec-sub">내 사진을 올리면, 얼굴과 분위기는 그대로 살리고 장르의 옷을 입은 작품 속 인물로 다시 빚어 드립니다.</p>
+
+        <div class="field">
+          <span class="flabel">내 사진</span>
+          <div class="upload-box">
+            <img id="photoPreview" alt="올린 사진 미리보기" style="display:none" />
+            <button type="button" class="btn" id="photoPickBtn">사진 고르기</button>
+            <input type="file" id="photoFile" accept="image/*" style="display:none" />
+            <div class="uhint">얼굴이 또렷하게 보이는 정면 사진이 가장 잘 빚어집니다.<br />사진은 변환하는 순간에만 그림을 만드는 서비스로 전달되며, 이 공방 어디에도 저장되지 않습니다.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="flabel">장르</span>
+          <div class="chips" id="photoGenreChips" role="group" aria-label="사진 변환 장르 선택"></div>
+        </div>
+
+        <div class="field">
+          <span class="flabel">시대 · 배경</span>
+          <div class="chips" id="photoEraChips" role="group" aria-label="사진 변환 시대와 배경 선택"></div>
+        </div>
+
+        <div class="field">
+          <span class="flabel">복장</span>
+          <div class="chips" id="photoOutfitChips" role="group" aria-label="사진 변환 복장 선택"></div>
+        </div>
+
+        <div class="field">
+          <span class="flabel">표정</span>
+          <div class="chips" data-pick="expr">
+            <button type="button" class="chip" data-value="" aria-pressed="true">사진 그대로</button>
+            <button type="button" class="chip" data-value="smile" aria-pressed="false">미소</button>
+            <button type="button" class="chip" data-value="determined" aria-pressed="false">결연한</button>
+            <button type="button" class="chip" data-value="sad" aria-pressed="false">슬픈</button>
+            <button type="button" class="chip" data-value="angry" aria-pressed="false">분노</button>
+            <button type="button" class="chip" data-value="surprised" aria-pressed="false">놀란</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="flabel">분위기</span>
+          <div class="chips" data-pick="mood">
+            <button type="button" class="chip" data-value="majestic" aria-pressed="true">장엄한</button>
+            <button type="button" class="chip" data-value="melancholy" aria-pressed="false">쓸쓸한</button>
+            <button type="button" class="chip" data-value="bright" aria-pressed="false">밝고 희망찬</button>
+            <button type="button" class="chip" data-value="dark" aria-pressed="false">어둡고 긴장된</button>
+            <button type="button" class="chip" data-value="dreamy" aria-pressed="false">몽환적인</button>
+            <button type="button" class="chip" data-value="warm" aria-pressed="false">따뜻한</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="flabel">구도</span>
+          <div class="chips" data-pick="framing">
+            <button type="button" class="chip" data-value="portrait" aria-pressed="true">초상 — 상반신 중심</button>
+            <button type="button" class="chip" data-value="cover" aria-pressed="false">표지 — 전신과 제목 여백</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="photoFreeText">추가 설명 <span class="hint">선택 사항 · 더하고 싶은 모습을 적어 주세요</span></label>
+          <textarea id="photoFreeText" rows="2" placeholder="예: 배경은 달빛 아래 대나무숲으로, 표정은 결연하게"></textarea>
+        </div>
+
+        <div class="gen-box">
+          <button type="button" class="btn primary block" id="photoGenBtn" style="padding:15px 18px; font-size:16.5px">사진 속 인물 빚어내기</button>
+          <p class="cost-line">변환 한 번에 체험 크레딧 한 장이 쓰입니다 · 남은 크레딧 <b id="photoCostCredits">5</b>장</p>
+        </div>
+      </section>
+
       <!-- ══════════ 결과 ══════════ -->
       <section class="view" id="view-result">
         <h2 class="sec-title" style="margin-top:2px">완성된 초상</h2>
@@ -435,7 +513,8 @@
 
         <div class="info-sec">
           <h3>사진으로 만들기</h3>
-          <p>내 사진을 올려 작품 속 인물로 바꾸는 기능은 <strong>준비 중</strong>입니다. 얼굴 사진을 다루는 일인 만큼, 보관과 삭제 방식을 엄격하게 다듬어 정식 개장 때 함께 열겠습니다.</p>
+          <p>내 사진을 올려 작품 속 인물로 바꾸는 기능이 <strong>열렸습니다</strong>. 고르신 장르와 복장으로, 얼굴과 분위기를 살려 다시 빚어 드립니다.</p>
+          <p>올리신 사진은 변환하는 순간에만 그림을 만드는 서비스로 전달되며, 이 공방의 어느 곳에도 저장되지 않습니다. 완성된 초상만 지금 쓰시는 브라우저에 보관됩니다.</p>
         </div>
 
         <div class="info-sec">
@@ -627,7 +706,7 @@
       /* ───────── 화면 전환 ───────── */
       function showView(name) {
         $$(".view").forEach(function (v) { v.classList.toggle("active", v.id === "view-" + name); });
-        var tabName = name === "result" ? "create" : name;
+        var tabName = name === "result" ? "create" : (name === "photo" ? "home" : name);
         $$(".tab").forEach(function (t) { t.classList.toggle("active", t.getAttribute("data-tab") === tabName); });
         window.scrollTo({ top: 0 });
       }
@@ -644,6 +723,8 @@
         $("#creditText").textContent = "체험 크레딧 " + credits + "장";
         $("#creditChip").classList.toggle("zero", credits <= 0);
         $("#costCredits").textContent = credits;
+        var pc = $("#photoCostCredits"); if (pc) pc.textContent = credits;
+        var pg = $("#photoGenBtn"); if (pg) pg.disabled = credits <= 0;
         var box = $("#exhaustedBox");
         if (credits <= 0) {
           box.innerHTML = '<div class="notice" style="margin-bottom:18px"><strong>체험 크레딧을 모두 쓰셨습니다.</strong><br />크레딧 충전과 표시 없는 고해상도 저장은 <strong>정식 개장을 준비하고 있습니다</strong>. 이미 빚어 두신 초상은 작업실에서 계속 보실 수 있습니다.</div>';
@@ -667,11 +748,14 @@
             + '<span class="gtag" style="display:block">' + g.tag + '</span>'
             + '<span class="go">이 화풍으로 만들기 →</span></span></button>';
         });
-        html += '<div class="gcard soon"><span class="thumb">'
+        html += '<button type="button" class="gcard" data-photo="1"><span class="thumb">'
           + '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13" r="3.4"/><path d="M8.5 7 10 4h4l1.5 3"/></svg></span>'
-          + '<span class="meta" style="display:block"><span class="gname">사진으로 만들기</span><span class="badge-soon">준비 중</span>'
-          + '<span class="gtag" style="display:block">내 사진을 올려 작품 속 인물로 바꾸는 기능입니다. 정식 개장 때 문을 엽니다.</span></span></div>';
+          + '<span class="meta" style="display:block"><span class="gname">사진으로 만들기</span><span class="badge-open">열림</span>'
+          + '<span class="gtag" style="display:block">내 사진을 올려 작품 속 인물로 바꾸는 기능입니다.</span>'
+          + '<span class="go">사진 올려서 만들기 →</span></span></button>';
         $("#gallery").innerHTML = html;
+        var photoCard = $("#gallery .gcard[data-photo]");
+        if (photoCard) photoCard.addEventListener("click", function () { showView("photo"); });
         $$("#gallery .gcard[data-genre]").forEach(function (card) {
           card.addEventListener("click", function () {
             applyGenre(card.getAttribute("data-genre"));
@@ -843,24 +927,221 @@
         renderStudio();
       }
 
+      /* ───────── 사진으로 만들기 ───────── */
+      var PHOTO_API = "https://chosang-photo.kanghwang65.workers.dev/";
+      var photo = { genre: "muhyup", era: 0, outfit: 0, expr: null, mood: "majestic", framing: "portrait", dataUri: null };
+      // 사진 화면의 고정 칩 그룹 (표정·분위기·구도)
+      $$(".chips[data-pick]").forEach(function (group) {
+        var name = group.getAttribute("data-pick");
+        group.addEventListener("click", function (e) {
+          var chip = e.target.closest(".chip");
+          if (!chip) return;
+          Array.prototype.forEach.call(group.querySelectorAll(".chip"), function (c) { c.setAttribute("aria-pressed", "false"); });
+          chip.setAttribute("aria-pressed", "true");
+          var v = chip.getAttribute("data-value");
+          photo[name] = (name === "expr" && v === "") ? null : v;
+        });
+      });
+
+      function buildPhotoGenreChips() {
+        $("#photoGenreChips").innerHTML = Object.keys(GENRES).map(function (key) {
+          return '<button type="button" class="chip genre" data-genre="' + key + '" aria-pressed="' + (key === photo.genre ? "true" : "false") + '">' + GENRES[key].name + '</button>';
+        }).join("");
+        $$("#photoGenreChips .chip").forEach(function (chip) {
+          chip.addEventListener("click", function () {
+            photo.genre = chip.getAttribute("data-genre");
+            $$("#photoGenreChips .chip").forEach(function (c) { c.setAttribute("aria-pressed", String(c.getAttribute("data-genre") === photo.genre)); });
+            buildPhotoEraChips();
+            buildPhotoOutfitChips();
+          });
+        });
+      }
+      function buildPhotoEraChips() {
+        var g = GENRES[photo.genre];
+        $("#photoEraChips").innerHTML = chipGroupHTML(g.eras);
+        bindIndexChips($("#photoEraChips"), function (i) { photo.era = i; });
+        photo.era = 0;
+      }
+      function buildPhotoOutfitChips() {
+        var g = GENRES[photo.genre];
+        $("#photoOutfitChips").innerHTML = chipGroupHTML(g.outfits);
+        bindIndexChips($("#photoOutfitChips"), function (i) { photo.outfit = i; });
+        photo.outfit = 0;
+      }
+      function buildPhotoPrompt(ps) {
+        var g = GENRES[ps.genre];
+        var parts = [];
+        parts.push("Transform this photo into a highly detailed digital painting of the same person as a web novel character");
+        parts.push("keep the same face, facial features, hairstyle and personal likeness clearly recognizable");
+        parts.push(ps.framing === "cover"
+          ? "full body shot, generous empty negative space above the head for book cover title text"
+          : "upper body portrait, face in clear focus");
+        parts.push("wearing " + g.outfits[ps.outfit].en);
+        parts.push(g.world);
+        parts.push(g.eras[ps.era || 0].en);
+        if (ps.expr && EXPRESSIONS[ps.expr]) parts.push(EXPRESSIONS[ps.expr]);
+        if (ps.mood && MOODS[ps.mood]) parts.push(MOODS[ps.mood]);
+        if (ps.freeText) parts.push(ps.freeText);
+        parts.push("cinematic lighting, web novel cover art");
+        return parts.join(", ");
+      }
+      $("#photoPickBtn").addEventListener("click", function () { $("#photoFile").click(); });
+      $("#photoFile").addEventListener("change", function (e) {
+        var f = e.target.files && e.target.files[0];
+        if (!f) return;
+        var url = URL.createObjectURL(f);
+        var img = new Image();
+        img.onload = function () {
+          var max = 768, w = img.naturalWidth, h = img.naturalHeight;
+          var scale = Math.min(1, max / Math.max(w, h));
+          var cv = document.createElement("canvas");
+          cv.width = Math.max(1, Math.round(w * scale));
+          cv.height = Math.max(1, Math.round(h * scale));
+          cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+          URL.revokeObjectURL(url);
+          photo.dataUri = cv.toDataURL("image/jpeg", 0.85);
+          var pv = $("#photoPreview");
+          pv.src = photo.dataUri;
+          pv.style.display = "block";
+          $("#photoPickBtn").textContent = "다른 사진 고르기";
+        };
+        img.onerror = function () {
+          URL.revokeObjectURL(url);
+          toast("사진을 읽지 못했습니다. 다른 사진으로 시도해 주세요.");
+        };
+        img.src = url;
+      });
+      $("#photoGenBtn").addEventListener("click", function () {
+        var ps = { genre: photo.genre, era: photo.era, outfit: photo.outfit, expr: photo.expr, mood: photo.mood, framing: photo.framing, freeText: $("#photoFreeText").value.trim() };
+        startPhotoGeneration(ps, Math.floor(Math.random() * 999999) + 1);
+      });
+
+      function startPhotoGeneration(ps, seed) {
+        if (generating) return;
+        if (!photo.dataUri) { showView("photo"); toast("먼저 사진을 올려 주세요"); return; }
+        if (credits <= 0) { renderCredits(); showView("photo"); toast("체험 크레딧이 없습니다"); return; }
+        generating = true;
+        var prompt = buildPhotoPrompt(ps);
+        current = { url: null, prompt: prompt, seed: seed, settings: { framing: ps.framing || "portrait" }, label: GENRES[ps.genre].name + " · 사진 변환", id: null, mode: "photo", photoSettings: JSON.parse(JSON.stringify(ps)) };
+
+        showView("result");
+        $("#resultLabel").textContent = current.label;
+        $("#resultFrame").classList.toggle("cover", ps.framing === "cover");
+        $("#resultImg").style.display = "none";
+        $("#resultWatermark").style.display = "none";
+        $("#resultActions").style.display = "none";
+        $("#resultMeta").textContent = "";
+        $("#errorBox").style.display = "none";
+        $("#loadingBox").style.display = "flex";
+
+        var mi = 0;
+        $("#loadingMsg").textContent = LOADING_MSGS[0];
+        clearInterval(msgTimer);
+        msgTimer = setInterval(function () {
+          mi = Math.min(mi + 1, LOADING_MSGS.length - 1);
+          $("#loadingMsg").textContent = LOADING_MSGS[mi];
+        }, 7000);
+
+        var done = false;
+        var ctl = ("AbortController" in window) ? new AbortController() : null;
+        clearTimeout(loadTimer);
+        loadTimer = setTimeout(function () {
+          if (done) return; done = true;
+          if (ctl) ctl.abort();
+          finishPhotoLoad(false, "기다리신 시간이 너무 길어졌습니다. 연결 상태를 확인하시고 다시 시도해 주세요. 체험 크레딧은 차감되지 않았습니다.");
+        }, 180000);
+        fetch(PHOTO_API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: photo.dataUri, prompt: prompt, seed: seed }),
+          signal: ctl ? ctl.signal : undefined
+        }).then(function (r) {
+          if (!r.ok) throw new Error("upstream " + r.status);
+          return r.blob();
+        }).then(function (blob) {
+          var fr = new FileReader();
+          fr.onload = function () {
+            if (done) return; done = true; clearTimeout(loadTimer);
+            current.url = fr.result;
+            var view = $("#resultImg");
+            view.src = fr.result;
+            view.style.display = "block";
+            finishPhotoLoad(true);
+          };
+          fr.onerror = function () {
+            if (done) return; done = true; clearTimeout(loadTimer);
+            finishPhotoLoad(false, "그림을 읽어 오지 못했습니다. 잠시 뒤 다시 시도해 주세요. 체험 크레딧은 차감되지 않았습니다.");
+          };
+          fr.readAsDataURL(blob);
+        }).catch(function () {
+          if (done) return; done = true; clearTimeout(loadTimer);
+          finishPhotoLoad(false, "그림을 만드는 곳에 닿지 못했습니다. 잠시 뒤 다시 시도해 주세요. 체험 크레딧은 차감되지 않았습니다.");
+        });
+      }
+      function finishPhotoLoad(ok, errMsg) {
+        generating = false;
+        clearInterval(msgTimer);
+        $("#loadingBox").style.display = "none";
+        if (!ok) {
+          $("#errorMsg").textContent = errMsg;
+          $("#errorBox").style.display = "flex";
+          return;
+        }
+        credits = Math.max(0, credits - 1);
+        store.set("chosang_credits", credits);
+        var item = {
+          id: "w" + Date.now().toString(36),
+          ts: Date.now(),
+          url: current.url, prompt: current.prompt, seed: current.seed,
+          settings: current.settings, label: current.label,
+          mode: "photo", photoSettings: current.photoSettings
+        };
+        current.id = item.id;
+        works.unshift(item);
+        if (works.length > 60) works = works.slice(0, 60);
+        store.set("chosang_works", works);
+        $("#resultWatermark").style.display = "flex";
+        $("#resultActions").style.display = "grid";
+        $("#resultMeta").textContent = "작업실에 소중히 보관했습니다 · 남은 체험 크레딧 " + credits + "장";
+        renderCredits();
+        renderStudio();
+      }
+
       /* ───────── 결과 화면 동작 ───────── */
       function requireCurrent() { return current && current.id; }
       $("#retryBtn").addEventListener("click", function () {
-        if (current) startGeneration(current.settings, current.seed);
+        if (!current) return;
+        if (current.mode === "photo") startPhotoGeneration(current.photoSettings, current.seed);
+        else startGeneration(current.settings, current.seed);
       });
       $("#regenBtn").addEventListener("click", function () {
         if (!requireCurrent()) return;
-        startGeneration(current.settings, Math.floor(Math.random() * 999999) + 1);
+        if (current.mode === "photo") startPhotoGeneration(current.photoSettings, Math.floor(Math.random() * 999999) + 1);
+        else startGeneration(current.settings, Math.floor(Math.random() * 999999) + 1);
       });
       $("#exprChips").addEventListener("click", function (e) {
         var chip = e.target.closest("[data-expr]");
         if (!chip || !requireCurrent()) return;
+        if (current.mode === "photo") {
+          var ps = JSON.parse(JSON.stringify(current.photoSettings));
+          ps.expr = chip.getAttribute("data-expr");
+          startPhotoGeneration(ps, current.seed);
+          return;
+        }
         var s = JSON.parse(JSON.stringify(current.settings));
         s.expression = chip.getAttribute("data-expr");
         startGeneration(s, current.seed);
       });
       $("#outfitBtn").addEventListener("click", function () {
         if (!requireCurrent()) return;
+        if (current.mode === "photo") {
+          var pso = JSON.parse(JSON.stringify(current.photoSettings));
+          var pcount = GENRES[pso.genre].outfits.length;
+          pso.outfit = (pso.outfit + 1) % pcount;
+          toast("다음 복장: " + GENRES[pso.genre].outfits[pso.outfit].label);
+          startPhotoGeneration(pso, current.seed);
+          return;
+        }
         var s = JSON.parse(JSON.stringify(current.settings));
         var count = GENRES[s.genre].outfits.length;
         s.outfit = (s.outfit + 1) % count;
@@ -911,7 +1192,7 @@
           btn.addEventListener("click", function () {
             var w = works.filter(function (x) { return x.id === btn.getAttribute("data-open"); })[0];
             if (!w) return;
-            current = { url: w.url, prompt: w.prompt, seed: w.seed, settings: w.settings, label: w.label, id: w.id };
+            current = { url: w.url, prompt: w.prompt, seed: w.seed, settings: w.settings, label: w.label, id: w.id, mode: w.mode || null, photoSettings: w.photoSettings || null };
             $("#resultLabel").textContent = w.label;
             $("#resultFrame").classList.toggle("cover", w.settings.framing === "cover");
             var img = $("#resultImg"); img.src = w.url; img.style.display = "block";
@@ -945,6 +1226,9 @@
       buildGallery();
       buildGenreChips();
       buildDynamicChips();
+      buildPhotoGenreChips();
+      buildPhotoEraChips();
+      buildPhotoOutfitChips();
       renderCredits();
       renderStudio();
     </script>
