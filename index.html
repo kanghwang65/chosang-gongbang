@@ -928,7 +928,7 @@
         store.set("chosang_works", works);
         $("#resultWatermark").style.display = OWNER_MODE ? "none" : "flex";
         $("#resultActions").style.display = "grid";
-        $("#resultMeta").textContent = "작업실에 소중히 보관했습니다 · " + (OWNER_MODE ? "주인 모드 (무제한)" : "남은 체험 크레딧 " + credits + "장") + ";
+        $("#resultMeta").textContent = "작업실에 소중히 보관했습니다 · " + (OWNER_MODE ? "주인 모드 (무제한)" : "남은 체험 크레딧 " + credits + "장") + "";
         renderCredits();
         renderStudio();
       }
@@ -1108,7 +1108,7 @@
         store.set("chosang_works", works);
         $("#resultWatermark").style.display = OWNER_MODE ? "none" : "flex";
         $("#resultActions").style.display = "grid";
-        $("#resultMeta").textContent = "작업실에 소중히 보관했습니다 · " + (OWNER_MODE ? "주인 모드 (무제한)" : "남은 체험 크레딧 " + credits + "장") + ";
+        $("#resultMeta").textContent = "작업실에 소중히 보관했습니다 · " + (OWNER_MODE ? "주인 모드 (무제한)" : "남은 체험 크레딧 " + credits + "장") + "";
         renderCredits();
         renderStudio();
       }
@@ -1206,7 +1206,7 @@
             $("#errorBox").style.display = "none";
             $("#resultWatermark").style.display = OWNER_MODE ? "none" : "flex";
             $("#resultActions").style.display = "grid";
-            $("#resultMeta").textContent = fmtDate(w.ts) + "에 빚은 초상 · " + (OWNER_MODE ? "주인 모드 (무제한)" : "남은 체험 크레딧 " + credits + "장") + ";
+            $("#resultMeta").textContent = fmtDate(w.ts) + "에 빚은 초상 · " + (OWNER_MODE ? "주인 모드 (무제한)" : "남은 체험 크레딧 " + credits + "장") + "";
             showView("result");
           });
         });
