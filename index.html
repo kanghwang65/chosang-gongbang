@@ -685,6 +685,12 @@
       };
       var credits = store.get("chosang_credits", null);
       if (typeof credits !== "number" || credits < 0) { credits = FREE_CREDITS; store.set("chosang_credits", credits); }
+      var OWNER_MODE = false;
+      try {
+        if (new URLSearchParams(location.search).get("owner") === "naerimi") store.set("chosang_owner", "1");
+        OWNER_MODE = store.get("chosang_owner", "") === "1";
+      } catch (e) { /* 주소 해석 불가 환경에서는 일반 모드 */ }
+      if (OWNER_MODE && credits < 9999) { credits = 9999; store.set("chosang_credits", credits); }
       var works = store.get("chosang_works", []);
       if (!Array.isArray(works)) works = [];
 
@@ -720,10 +726,10 @@
 
       /* ───────── 크레딧 표시 ───────── */
       function renderCredits() {
-        $("#creditText").textContent = "체험 크레딧 " + credits + "장";
+        $("#creditText").textContent = OWNER_MODE ? "주인 모드 · 무제한" : "체험 크레딧 " + credits + "장";
         $("#creditChip").classList.toggle("zero", credits <= 0);
-        $("#costCredits").textContent = credits;
-        var pc = $("#photoCostCredits"); if (pc) pc.textContent = credits;
+        $("#costCredits").textContent = OWNER_MODE ? "무제한" : credits;
+        var pc = $("#photoCostCredits"); if (pc) pc.textContent = OWNER_MODE ? "무제한" : credits;
         var pg = $("#photoGenBtn"); if (pg) pg.disabled = credits <= 0;
         var box = $("#exhaustedBox");
         if (credits <= 0) {
@@ -920,9 +926,9 @@
         works.unshift(item);
         if (works.length > 60) works = works.slice(0, 60);
         store.set("chosang_works", works);
-        $("#resultWatermark").style.display = "flex";
+        $("#resultWatermark").style.display = OWNER_MODE ? "none" : "flex";
         $("#resultActions").style.display = "grid";
-        $("#resultMeta").textContent = "작업실에 소중히 보관했습니다 · 남은 체험 크레딧 " + credits + "장";
+        $("#resultMeta").textContent = "작업실에 소중히 보관했습니다 · " + (OWNER_MODE ? "주인 모드 (무제한)" : "남은 체험 크레딧 " + credits + "장") + ";
         renderCredits();
         renderStudio();
       }
@@ -1100,9 +1106,9 @@
         works.unshift(item);
         if (works.length > 60) works = works.slice(0, 60);
         store.set("chosang_works", works);
-        $("#resultWatermark").style.display = "flex";
+        $("#resultWatermark").style.display = OWNER_MODE ? "none" : "flex";
         $("#resultActions").style.display = "grid";
-        $("#resultMeta").textContent = "작업실에 소중히 보관했습니다 · 남은 체험 크레딧 " + credits + "장";
+        $("#resultMeta").textContent = "작업실에 소중히 보관했습니다 · " + (OWNER_MODE ? "주인 모드 (무제한)" : "남은 체험 크레딧 " + credits + "장") + ";
         renderCredits();
         renderStudio();
       }
@@ -1198,9 +1204,9 @@
             var img = $("#resultImg"); img.src = w.url; img.style.display = "block";
             $("#loadingBox").style.display = "none";
             $("#errorBox").style.display = "none";
-            $("#resultWatermark").style.display = "flex";
+            $("#resultWatermark").style.display = OWNER_MODE ? "none" : "flex";
             $("#resultActions").style.display = "grid";
-            $("#resultMeta").textContent = fmtDate(w.ts) + "에 빚은 초상 · 남은 체험 크레딧 " + credits + "장";
+            $("#resultMeta").textContent = fmtDate(w.ts) + "에 빚은 초상 · " + (OWNER_MODE ? "주인 모드 (무제한)" : "남은 체험 크레딧 " + credits + "장") + ";
             showView("result");
           });
         });
